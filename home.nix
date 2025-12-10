@@ -126,6 +126,7 @@
     btop
     htop
     radeontop
+    devenv
     # # fastfetch
 
 
