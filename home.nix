@@ -127,6 +127,7 @@
     htop
     radeontop
     devenv
+    gamemode
     # # fastfetch
 
 
