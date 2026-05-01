@@ -128,6 +128,7 @@
     radeontop
     devenv
     gamemode
+    go
     # # fastfetch
 
 
