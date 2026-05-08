@@ -129,6 +129,8 @@
     devenv
     gamemode
     go
+    postgresql
+    tmux
     # # fastfetch
 
 
