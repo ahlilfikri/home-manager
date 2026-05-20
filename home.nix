@@ -1,5 +1,33 @@
 { config, pkgs, ... }:
 
+let
+  nixGLWrap = pkg: pkgs.symlinkJoin {
+    name = "${pkg.name}-nixgl";
+    paths = [ pkg ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      for bin in $out/bin/*; do
+        if [ -f "$bin" ] || [ -L "$bin" ]; then
+          target=$(readlink -f "$bin")
+          rm "$bin"
+          makeWrapper ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel "$bin" \
+            --add-flags "$target"
+        fi
+      done
+
+      if [ -d "$out/share/applications" ]; then
+        for desktop in $out/share/applications/*.desktop; do
+          [ -e "$desktop" ] || continue
+          name=$(basename "$desktop")
+          rm "$desktop"
+          cp --no-preserve=mode ${pkg}/share/applications/"$name" "$desktop"
+          substituteInPlace "$desktop" \
+            --replace "${pkg}/bin/" "$out/bin/"
+        done
+      fi
+    '';
+  };
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -131,6 +159,13 @@
     go
     postgresql
     tmux
+    neovim
+    ripgrep
+    fd
+    xclip
+    trash-cli
+    google-cloud-sdk
+    (nixGLWrap ghostty)
     # # fastfetch
 
 
